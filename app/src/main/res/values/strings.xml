@@ -2,4 +2,6 @@
     <string name="app_name">Newsapi</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="open_article_text">Original source</string>
+    <string name="more_text">More information</string>
 </resources>

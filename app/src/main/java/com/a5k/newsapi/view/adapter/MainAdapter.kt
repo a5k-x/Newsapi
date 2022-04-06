@@ -4,12 +4,17 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.a5k.newsapi.data.model.Articles
+import coil.ImageLoader
+import coil.load
+import coil.transform.CircleCropTransformation
+import coil.transform.RoundedCornersTransformation
+import com.a5k.newsapi.R
+import com.a5k.newsapi.data.model.NewsItem
 import com.a5k.newsapi.databinding.ItemNewsBinding
 
 class MainAdapter:RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var listNews = listOf<Articles>()
+    private var listNews = listOf<NewsItem>()
     lateinit var clickHandler: ClickHandler
 
     fun initListenerItem(listener:ClickHandler){
@@ -17,17 +22,26 @@ class MainAdapter:RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun init(listNews:List<Articles>){
+    fun init(listNews:List<NewsItem>){
         this.listNews = listNews
         notifyDataSetChanged()
     }
 
     inner class ViewHolder(private val vb: ItemNewsBinding) :RecyclerView.ViewHolder(vb.root) {
         fun bind(position: Int) {
-            vb?.titleNews.text = listNews[position].title
-            itemView.setOnClickListener {
+            vb?.titleText.text = listNews[position].title
+            vb?.moreText.setOnClickListener {
                 clickHandler.clickListener(listNews[position])
             }
+            vb?.authorText.text = listNews[position].author
+            val imageLoader = ImageLoader.Builder(vb.root.context)
+                .error(R.drawable.icon_error)
+                .placeholder(R.drawable.icon_download_image)
+                .build()
+            vb?.cardImageView.load(listNews[position].urlToImage,imageLoader){transformations(
+                RoundedCornersTransformation(20F)
+            )}
+
         }
 
     }
@@ -44,5 +58,5 @@ class MainAdapter:RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 }
 
 interface ClickHandler{
-    fun clickListener(articles: Articles)
+    fun clickListener(news: NewsItem)
 }
